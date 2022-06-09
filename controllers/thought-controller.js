@@ -28,8 +28,21 @@ const thoughtController = {
     //POST a new thought (push the created thought's _id to the associated user's thoughts array field)
     createThought({ body }, res) {
         Thought.create(body)
-        .then(dbThoughtData => res.json(dbThoughtData))
-        .catch(err => res.status(400).json(err));
+        .then(({_id}) => {
+            return User.findOneAndUpdate(
+                { _id: params.userId },
+                { $push: {thoughts: _id } },
+                { new: true }
+            )    
+        })
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'user not found.' });
+                return;
+            }
+            res.json(dbUserData);
+        })
+        .catch(err => res.json(err));
     },
     //PUT to update a thought by the _id
     updateThought({ params, body }, res) {

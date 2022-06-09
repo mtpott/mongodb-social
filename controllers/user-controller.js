@@ -54,6 +54,21 @@ const userController = {
             res.json(dbUserData);
         })
         .catch(err => res.status(400).json(err));
+    },
+    //POST to add a new friend to a user's friend list
+    addFriend({ params }, res) {
+        User.findByIdAndUpdate(
+            { _id: params.id},
+            { $push: 'friends', id}
+            //find user by their _id and update the friend array
+            //USE $PUSH TO PUSH THE NEW FRIEND TO THE FRIEND ARRAY
+        )
+    },
+    // DELETE to remove a friend from a user's friend list
+    removeFriend({ params }, res) {
+        User.findByIdAndDelete({
+            //find the user by their _id and remove the corresponding friend from the array
+        })
     }
 };
 
