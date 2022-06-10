@@ -27,7 +27,6 @@ const thoughtController = {
         });
     },
     //POST a new thought (push the created thought's _id to the associated user's thoughts array field)
-    // $push to user "thoughts" array --> ???????
     createThought({ body }, res) {
         Thought.create(body)
         .then(({ _id }) => {
@@ -37,7 +36,6 @@ const thoughtController = {
                 { $push: {thoughts: _id } },
                 { new: true }
             )
-            
         })
         .then(dbUserData => {
             if (!dbUserData) {
@@ -63,6 +61,38 @@ const thoughtController = {
     //DELETE to remove a thought by the _id
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.id })
+        .then(dbThoughtData => {
+            if (!dbThoughtData) {
+                res.status(404).json({ message: 'no thought found.' });
+                return;
+            }
+            res.json(dbThoughtData);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+    //POST to create a reaction stored in a single thought's reactions array field
+    addReaction({ params, body }, res) {
+        Thought.findByIdAndUpdate(
+            { _id: params.thoughtId },
+            { $push: { reactions: body } },
+            { new: true }
+        )
+        .then(dbThoughtData => {
+            if (!dbThoughtData) {
+                res.status(404).json({ message: 'no thought found.' });
+                return;
+            }
+            res.json(dbThoughtData);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+    //DELETE to pull and remove a reaction by the reaction's reactionId value
+    removeReaction({ params }, res) {
+        Thought.findOneAndUpdate(
+            { _id: params.thoughtId },
+            { $pull: { reactions: { replyId: params.replyId } } },
+            { new: true }
+        )
         .then(dbThoughtData => {
             if (!dbThoughtData) {
                 res.status(404).json({ message: 'no thought found.' });
