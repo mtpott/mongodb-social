@@ -1,4 +1,5 @@
 const { Schema, model, Types } = require('mongoose');
+const { format } = require('date-fns');
 
 //reaction schema-->not a model, but used as reaction field's subdoc schema in this model
 const ReactionSchema = new Schema({
@@ -18,7 +19,7 @@ const ReactionSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        //getter method to format timestamp
+        get: createdAtVal => format(createdAtVal, 'MM.dd.yyyy hh:mm a')
     }
 },
 {
@@ -41,7 +42,7 @@ const ThoughtSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        //getter method
+        get: createdAtVal => format(createdAtVal, 'MM.dd.yyyy hh:mm a')
     },
     username: {
         type: String,
@@ -57,7 +58,8 @@ const ThoughtSchema = new Schema({
     toJSON: {
         virtuals: true,
         getters: true
-    }
+    },
+    id: false
 })
 
 //reactionCount virtual that retrieves the length of the thought's reactions array field on query
