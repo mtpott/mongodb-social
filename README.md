@@ -16,6 +16,7 @@ Aside from GET requests and the POST requests fulfilling user, friend, thought, 
 ## Video
 ### Please follow the link below for a walkthrough of how the Employee Generator works:
 
+https://drive.google.com/file/d/1T_x4IKMJvTVJHYZY9uWlBZkDYDY3YDBG/view?usp=sharing
 
 ## Technologies
 
